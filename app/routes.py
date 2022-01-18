@@ -20,6 +20,8 @@ def name():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
+
+    # checks if the method is a post and if it is, it checks if all inputs are valid
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
