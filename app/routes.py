@@ -5,7 +5,12 @@ from flask import render_template
 def index():
     my_name = 'David'
     colors = ['red', 'blue', 'green']
-    return render_template('index.html', name = 'David', city='Arcadia', colors=colors)
+    person = {
+        'name': 'Ferris Buller',
+        'age': 18,
+        'best_friend': 'Cameron'
+    }
+    return render_template('index.html', name = 'David', city='Arcadia', colors=colors, person=person)
 
 
 @app.route('/name')

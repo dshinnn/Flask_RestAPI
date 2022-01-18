@@ -19,4 +19,5 @@
         <!-- MUST have endfor to let jinja know where the for-loop ends (indents do not matter in jinja) -->
         {% endfor %}
     </ul>
+    <p>The person's name is: {{ person['name'] }} and he is {{ person['age'] }} years old and his best friend is {{ person['best_friend'] }}</p>
 {% endblock %}
