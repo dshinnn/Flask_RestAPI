@@ -21,5 +21,8 @@ def name():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        print('Form has been validated!')
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        print(username, email, password)
     return render_template('register.html', form=form)
