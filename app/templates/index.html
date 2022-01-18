@@ -1,0 +1,22 @@
+<!-- References parent template and imports -->
+{% extends 'base.html' %}
+
+<!-- Overrides parent's template content block -->
+{% block content %}
+    {# {{ }} references a variable in jinja #}
+    <h1>Hello {{ name }} from the render template! Are you from {{city}}?</h1>
+    <p>My favorite colors are:</p>
+    <ul>
+        <!-- for-loop example in jinja -->
+        {% for c in colors %}
+            <!-- if-else example in jinja -->
+            {% if c == 'blue' %}
+                <li>{{ c.upper() }}</li>
+            {% else %}
+                <li>{{c}}</li>
+            <!-- MUST have endif to let jinja know where the if statement ends (indents do not matter in jinja) -->
+            {% endif %}
+        <!-- MUST have endfor to let jinja know where the for-loop ends (indents do not matter in jinja) -->
+        {% endfor %}
+    </ul>
+{% endblock %}
