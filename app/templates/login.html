@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <h1>Login Here</h1>
+    <form action="" method="post">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            <fieldset>
+                {{ form.username.label }}
+                {{ form.username(class='form-control', placeholder='Username') }}
+            </fieldset>
+
+            <fieldset>
+                {{ form.password.label }}
+                {{ form.password(class='form-control', placeholder='Password') }}
+            </fieldset>
+        </div>
+        {{ form.submit(class='btn btn-outline-success') }}
+    </form>
+{% endblock %}
