@@ -3,21 +3,9 @@
 
 <!-- Overrides parent's template content block -->
 {% block content %}
-    {# {{ }} references a variable in jinja #}
-    <h1>Hello {{ name }} from the render template! Are you from {{city}}?</h1>
-    <p>My favorite colors are:</p>
-    <ul>
-        <!-- for-loop example in jinja -->
-        {% for c in colors %}
-            <!-- if-else example in jinja -->
-            {% if c == 'blue' %}
-                <li>{{ c.upper() }}</li>
-            {% else %}
-                <li>{{c}}</li>
-            <!-- MUST have endif to let jinja know where the if statement ends (indents do not matter in jinja) -->
-            {% endif %}
-        <!-- MUST have endfor to let jinja know where the for-loop ends (indents do not matter in jinja) -->
-        {% endfor %}
-    </ul>
-    <p>The person's name is: {{ person['name'] }} and he is {{ person['age'] }} years old and his best friend is {{ person['best_friend'] }}</p>
+    {% if current_user.is_authenticated %}
+        <h1>Welcome back, {{ current_user.username }}!</h1>
+    {% else %}
+        <h1>Welcome to our shop. Please register to use our app</h1>
+    {% endif %}
 {% endblock %}

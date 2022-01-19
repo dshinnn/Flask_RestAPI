@@ -1,3 +1,4 @@
 flask_intro_venv/
 .env
 __pycache__
+examples.txt
