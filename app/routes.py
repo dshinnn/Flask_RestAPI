@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, redirect, url_for
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 from app.forms import RegisterForm, LoginForm
 from app.models import User
 
@@ -15,6 +15,7 @@ def index():
     return render_template('index.html', name='David', city='Arcadia', colors=colors, person=person)
 
 @app.route('/name')
+@login_required
 def name():
     return render_template('name.html', name='David')
 
