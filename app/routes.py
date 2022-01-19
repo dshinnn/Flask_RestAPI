@@ -1,5 +1,6 @@
 from app import app
 from flask import render_template, redirect, url_for
+from flask_login import login_user
 from app.forms import RegisterForm, LoginForm
 from app.models import User
 
@@ -41,8 +42,25 @@ def register():
         
     return render_template('register.html', form=form)
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+
+    if form.validate_on_submit():
+        # Get data from the form
+        username = form.username.data
+        password = form.password.data
+
+        # Query user table for user with username
+        user = User.query.filter_by(username=username).first()
+
+        # if the user does not exist or the user has an incorrect password
+        if not user or not user.check_password(password):
+            # redirect to login page
+            return redirect(url_for('login'))
+        # if user does exist and correct password, log user in
+        login_user(user)
+        print('User has been logged in')
+        return redirect(url_for('index'))
 
     return render_template('login.html', form=form)
