@@ -12,6 +12,8 @@ class User(db.Model):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.password = generate_password_hash(kwargs['password'])
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return f'<User|{self.username}>'
