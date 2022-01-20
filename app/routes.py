@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, redirect, url_for, flash
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import RegisterForm, LoginForm, ProductForm
 from app.models import User, Product, Category
 
@@ -80,6 +80,9 @@ def product_info(prod_id):
 @app.route('/products/<int:prod_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_product(prod_id):
+    if not current_user.is_admin:
+        flash("Excuse me you are not allowed here.", "warning")
+        return redirect(url_for('index'))
     product = Product.query.get_or_404(prod_id)
     form = ProductForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query.all()]
@@ -100,3 +103,14 @@ def edit_product(prod_id):
         flash(f"{product.name} has been updated", "primary")
         return redirect(url_for('product_info', prod_id=product.id))
     return render_template('edit_product.html', product=product, form=form)
+
+@app.route('/products/<int:prod_id>/delete')
+@login_required
+def delete_product(prod_id):
+    if not current_user.is_admin:
+        flash("Excuse me you are not allowed here.", "warning")
+        return redirect(url_for('index'))
+    product = Product.query.get_or_404(prod_id)
+    product.delete()
+    flash(f"{product.name} has been deleted", "danger")
+    return redirect(url_for('index'))
