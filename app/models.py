@@ -33,6 +33,12 @@ class Category(db.Model):
     color = db.Column(db.String(20), nullable=False)
     products = db.relationship('Product', backref='category')
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        db.session.add(self)
+        db.session.commit()
+
+
     def __repr__(self):
         return f'<Category|{self.name}>'
 
@@ -43,6 +49,11 @@ class Product(db.Model):
     price = db.Column(db.Numeric(5,2), nullable=False)
     image_url = db.Column(db.String(256))
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        db.session.add(self)
+        db.session.commit()
 
     def __repr__(self):
         return f'<Product|{self.name}>'
