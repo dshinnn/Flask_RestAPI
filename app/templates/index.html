@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ prod.name }}</h5>
                         <p class="card-text">{{ prod.price }}</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a href="{{ url_for('product_info', prod_id=prod.id) }}" class="btn btn-primary">More Info</a>
                     </div>
                 </div>
             </div>

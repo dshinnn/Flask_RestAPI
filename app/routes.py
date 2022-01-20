@@ -69,3 +69,9 @@ def logout():
     logout_user()
     flash('You have successfully logged out', 'secondary')
     return redirect(url_for('index'))
+
+@app.route('/products/<int:prod_id>')
+def product_info(prod_id):
+    # get_or_404 returns a http 404 error instead of a 500 (interal server error)
+    product = Product.query.get_or_404(prod_id)
+    return render_template('product.html', product=product)
