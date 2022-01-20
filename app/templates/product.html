@@ -4,11 +4,27 @@
 
 {% block content %}
     <div class="card">
-        <img src="{{ product.image_url}}" class="card-img-top" alt="...">
+        <img src="{{ product.image_url}}" class="card-img-top" alt="{{ product.name }}">
         <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
         <p class="card-text"> {{ product.price }}</p>
         <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
+    </div>
+
+    <hr>
+    <h4>Other Products in the {{ product.category.name }} category</h4>
+    <div class="row">
+        {% for p in product.category.products %}
+            {% if p.id != product.id %}
+                <div class="col-md-4">
+                    <a href="{{ url_for('product_info', prod_id=p.id) }}"></a>
+                    <div class="card">
+                        <img src="{{ product.image_url}}" class="card-img-top" alt="{{ product.name }}">
+                        <h5 class="card-title">{{ p.name }}</h5>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
 {% endblock %}
