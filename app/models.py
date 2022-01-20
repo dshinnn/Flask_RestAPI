@@ -1,3 +1,4 @@
+from sqlalchemy import ForeignKey
 from app import db, login
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -25,3 +26,23 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    color = db.Column(db.String(20), nullable=False)
+    products = db.relationship('Product', backref='category')
+
+    def __repr__(self):
+        return f'<Category|{self.name}>'
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    name = db.Column(db.String(180), nullable=False)
+    price = db.Column(db.Numeric(5,2), nullable=False)
+    image_url = db.Column(db.String(256))
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Product|{self.name}>'
