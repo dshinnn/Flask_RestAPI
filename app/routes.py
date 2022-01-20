@@ -9,11 +9,7 @@ def index():
     products = Product.query.all()
     return render_template('index.html', products=products)
 
-@app.route('/name')
-@login_required
-def name():
-    return render_template('name.html', name='David')
-
+# Register a new user
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -40,6 +36,7 @@ def register():
         
     return render_template('register.html', form=form)
 
+# Logins user
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -64,12 +61,15 @@ def login():
 
     return render_template('login.html', form=form)
 
+# Logs out current user
 @app.route('/logout')
 def logout():
     logout_user()
     flash('You have successfully logged out', 'secondary')
     return redirect(url_for('index'))
 
+# --- CRUD Operations ---
+# INSERT
 @app.route('/products/<int:prod_id>')
 @login_required
 def product_info(prod_id):
@@ -77,9 +77,11 @@ def product_info(prod_id):
     product = Product.query.get_or_404(prod_id)
     return render_template('product.html', product=product)
 
+# UPDATE
 @app.route('/products/<int:prod_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_product(prod_id):
+    # Checks if the user is an admin and redirects user to home page if not
     if not current_user.is_admin:
         flash("Excuse me you are not allowed here.", "warning")
         return redirect(url_for('index'))
@@ -87,6 +89,7 @@ def edit_product(prod_id):
     form = ProductForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query.all()]
 
+    # Checks if the inputted information is valid
     if form.validate_on_submit():
         # Get data from the form
         name = form.name.data
@@ -101,16 +104,28 @@ def edit_product(prod_id):
         product.category_id = category_id
         product.save()
         flash(f"{product.name} has been updated", "primary")
+        
+        # Redirects to product info page
         return redirect(url_for('product_info', prod_id=product.id))
     return render_template('edit_product.html', product=product, form=form)
 
+# DELETE
 @app.route('/products/<int:prod_id>/delete')
 @login_required
 def delete_product(prod_id):
+    # Checks if the user is an admin and redirects user to home page if not
     if not current_user.is_admin:
         flash("Excuse me you are not allowed here.", "warning")
         return redirect(url_for('index'))
+    
+    # Grabs the product to delete
     product = Product.query.get_or_404(prod_id)
+    
+    # Deletes product
     product.delete()
+    
+    # Display message
     flash(f"{product.name} has been deleted", "danger")
+    
+    # Redirects to home page
     return redirect(url_for('index'))
