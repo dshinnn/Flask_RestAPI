@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Edit Product {{ product.name }} </h1>
+
+    <form action="" method="post">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            <fieldset>
+                {{ form.name.label }}
+                {{ form.name(class='form-control', value=product.name) }}
+            </fieldset>
+            <fieldset>
+                {{ form.price.label }}
+                {{ form.price(class='form-control', value=product.price) }}
+            </fieldset>
+            <fieldset>
+                {{ form.image_url.label }}
+                {{ form.image_url(class='form-control', value=product.image_url) }}
+            </fieldset>
+            <fieldset>
+                {{ form.category_id.label }}
+                {{ form.category_id(class='form-control') }}
+            </fieldset>
+        </div>
+        {{ form.submit(class='btn btn-secondary') }}
+    </form>
+{% endblock %}
