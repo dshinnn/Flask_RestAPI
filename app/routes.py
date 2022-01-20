@@ -77,10 +77,26 @@ def product_info(prod_id):
     product = Product.query.get_or_404(prod_id)
     return render_template('product.html', product=product)
 
-@app.route('/products/<int:prod_id>/edit')
+@app.route('/products/<int:prod_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_product(prod_id):
     product = Product.query.get_or_404(prod_id)
     form = ProductForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query.all()]
+
+    if form.validate_on_submit():
+        # Get data from the form
+        name = form.name.data
+        price = form.price.data
+        image_url = form.image_url.data
+        category_id = form.category_id.data
+
+        # Update the product with the new info
+        product.name = name
+        product.price = price
+        product.image_url = image_url
+        product.category_id = category_id
+        product.save()
+        flash(f"{product.name} has been updated", "primary")
+        return redirect(url_for('product_info', prod_id=product.id))
     return render_template('edit_product.html', product=product, form=form)

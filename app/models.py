@@ -57,3 +57,6 @@ class Product(db.Model):
 
     def __repr__(self):
         return f'<Product|{self.name}>'
+
+    def save(self):
+        db.session.commit()
