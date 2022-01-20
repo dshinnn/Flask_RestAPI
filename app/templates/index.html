@@ -8,4 +8,18 @@
     {% else %}
         <h1>Welcome to our shop. Please register to use our app</h1>
     {% endif %}
+
+    <div class="row">
+        {% for prod in products %}
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="card">
+                    <img src="{{ prod.image_url }}" class="card-img-top" alt="{{ prod.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ prod.name }}</h5>
+                        <p class="card-text">{{ prod.price }}</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
 {% endblock %}
