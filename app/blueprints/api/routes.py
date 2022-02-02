@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from app.models import User
+from app.models import User, Product
 from . import bp as api
 from .auth import basic_auth, token_auth
 
@@ -74,3 +74,27 @@ def delete_user(id):
     
     User.query.get_or_404(id).delete()
     return jsonify({}), 204
+
+# Get all products
+@api.route('/products')
+def get_products():
+    products = Product.query.all()
+    return jsonify([product.to_dict() for product in products])
+
+# Get single product
+@api.route('/products/<int:id>')
+def get_product(id):
+    product = Product.query.get_or_404(id)
+
+    if product:
+        return jsonify(product.to_dict())
+
+# Update product
+@api.route('/products/<int:id>', methods=['PUT'])
+def update_product(id):
+    product = Product.query.get_or_404(id)
+    data = request.json
+    product.update(data)
+    return(product.to_dict())
+
+# Delete product

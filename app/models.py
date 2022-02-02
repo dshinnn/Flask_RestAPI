@@ -101,6 +101,22 @@ class Product(db.Model):
     def __repr__(self):
         return f'<Product|{self.name}>'
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "price": self.price,
+            "image_url": self.image_url,
+            "date_created": self.date_created
+        }
+
+    def update(self, data):
+        for field in data:
+            if field not in {'name', 'price', 'image_url', 'date_created'}:
+                continue
+            setattr(self, field, data[field])
+        db.session.commit()
+
     def save(self):
         db.session.commit()
 
