@@ -1,6 +1,8 @@
+import os
+import base64
 from sqlalchemy import ForeignKey
 from app import db, login
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -15,6 +17,8 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     is_admin = db.Column(db.Boolean, default=False)
+    token = db.Column(db.String(32), unique=True, index=True)
+    token_expiration = db.Column(db.DateTime)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -36,6 +40,21 @@ class User(db.Model, UserMixin):
             'date_created': self.date_created,
             'is_admin': self.is_admin
         }
+
+    def get_token(self, expires_in=3600):
+        now = datetime.utcnow()
+        
+        if self.token and self.token_expiration > now + timedelta(minutes=1):
+            return self.token
+        
+        # Generates a new random token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+
+        # Save to database
+        db.session.commit()
+        
+        return self.token
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
