@@ -121,3 +121,8 @@ def update_product(id):
     return(product.to_dict())
 
 # Delete product
+@api.route('/products/<int:id>', methods=['DELETE'])
+def delete_product(id):
+    product = Product.query.get_or_404(id)
+    product.delete()
+    return jsonify({}), 204
