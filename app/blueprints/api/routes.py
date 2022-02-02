@@ -91,9 +91,15 @@ def get_product(id):
 
 # Create product
 @api.route('/products', methods=['POST'])
+@token_auth.login_required
 def create_product():
     data = request.json
     print(data)
+    current_user = token_auth.current_user()
+
+    # Check if user is admin (cannot create new product if not)
+    if not current_user.is_admin:
+        return jsonify({'error': 'You are not authorized to create a new product'}), 403
 
     # Validating data
     for field in ['name', 'price', 'image_url', 'category_id']:
@@ -114,7 +120,14 @@ def create_product():
 
 # Update product
 @api.route('/products/<int:id>', methods=['PUT'])
+@token_auth.login_required
 def update_product(id):
+    current_user = token_auth.current_user()
+
+    # Check if user is admin (cannot update product if not)
+    if not current_user.is_admin:
+        return jsonify({'error': 'You are not authorized to update product information'}), 403
+
     product = Product.query.get_or_404(id)
     data = request.json
     product.update(data)
@@ -123,6 +136,12 @@ def update_product(id):
 # Delete product
 @api.route('/products/<int:id>', methods=['DELETE'])
 def delete_product(id):
+    current_user = token_auth.current_user()
+
+    # Check if user is admin (cannot delete a product if not)
+    if not current_user.is_admin:
+        return jsonify({'error': 'You are not authorized to delete a product'}), 403
+
     product = Product.query.get_or_404(id)
     product.delete()
     return jsonify({}), 204
