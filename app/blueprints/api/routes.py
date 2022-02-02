@@ -2,6 +2,7 @@ from flask import jsonify, request
 from app.models import User, Product
 from . import bp as api
 from .auth import basic_auth, token_auth
+from datetime import datetime
 
 # Get token
 @api.route('/token', methods=['POST'])
@@ -85,9 +86,31 @@ def get_products():
 @api.route('/products/<int:id>')
 def get_product(id):
     product = Product.query.get_or_404(id)
-
     if product:
         return jsonify(product.to_dict())
+
+# Create product
+@api.route('/products', methods=['POST'])
+def create_product():
+    data = request.json
+    print(data)
+
+    # Validating data
+    for field in ['name', 'price', 'image_url', 'category_id']:
+        if field not in data:
+            return jsonify({'error': f'Missing {field} field'})
+
+    # Grabs field data from body of the POST request
+    name = data['name']
+    price = data['price']
+    image_url = data['image_url']
+    category_id = data['category_id']
+
+    # Creates new product using retrieved data
+    new_product = Product(name=name, price=price, image_url=image_url, category_id=category_id)
+    
+    # Returns a print out of the product
+    return jsonify(new_product.to_dict())
 
 # Update product
 @api.route('/products/<int:id>', methods=['PUT'])
