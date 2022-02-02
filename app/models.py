@@ -56,6 +56,20 @@ class User(db.Model, UserMixin):
         
         return self.token
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        
+    def update(self, data):
+        for field in data:
+            if field not in {'username', 'email', 'is_admin'}:
+                continue
+            if field == 'password':
+                setattr(self, field, generate_password_hash(data[field]))
+            else:
+                setattr(self, field, data[field])
+        db.session.commit()
+
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
